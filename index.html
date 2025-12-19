@@ -123,9 +123,7 @@ body {
   font-size: clamp(3rem, 7vw, 5.5rem);
   font-weight: 600;
   line-height: 1.05;
-  opacity: 0;
-  animation: textReveal 1.6s ease forwards;
-  font-family: "Brasika Display", serif; /* ✅ ONLY THIS */
+  font-family: "Brasika Display"; /* ✅ ONLY THIS */
 }
 
 .text span {
@@ -577,7 +575,10 @@ document.addEventListener("mousemove", e => {
 
 <script>
 document.fonts.load('1em "Brasika Display"').then(() => {
-  document.querySelector(".text h1").style.visibility = "visible";
+  const h1 = document.querySelector(".text h1");
+
+  h1.style.visibility = "visible";
+  h1.style.animation = "textReveal 1.6s ease forwards";
 });
 </script>
 
