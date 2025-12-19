@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cinematic Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<!-- GSAP -->
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+<style>
+/* ---------------- RESET ---------------- */
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body {
+ font-family:'Poppins',sans-serif;
+overflow-x:hidden;
+background: linear-gradient(
+    120deg,
+    #0b0b0b,
+    #140c1f,
+    #0a1a22,
+    #140c1f,
+    #0b0b0b
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 18s ease infinite;
+  color: #fff; }
+
+/* ---------------- GLOBAL FX ---------------- */
+.noise {
+  position:fixed; inset:0;
+  background:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:.06; pointer-events:none; z-index:50;
+}
+
+
+#page-transition {
+  position: fixed;
+  inset: 0;
+  background: #0b0b0b;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .6s cubic-bezier(.22,1,.36,1);
+}
+
+#page-transition.active {
+  opacity: 1;
+  pointer-events: all; /* 🔥 LOCK UI */
+}
+
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(16px);
+  padding: 6px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.pill {
+  position: absolute;
+  top: 6px;
+  left: 2px;
+  width: 88px;
+  height: calc(100% - 12px);
+  background: rgba(255,255,255,0.28);
+  border-radius: 999px;
+
+  /* 🔥 IMPORTANT */
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pill.no-anim {
+  transition: none !important;
+}
+
+.nav-item {
+  position: relative;
+  z-index: 1;
+  width: 88px;
+  text-align: center;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ---------------- HERO ---------------- */
+.hero {
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero video {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(.7);
+}
+
+.hero-overlay {
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, transparent 40%, #0b0b0d 90%);
+}
+
+.hero-text {
+  position:absolute;
+  left:8%;
+  bottom:20%;
+}
+
+.hero-text h1 {
+  font-size:clamp(3rem,6vw,6rem);
+  font-weight:800;
+  line-height:1.05;
+  filter:blur(20px);
+  opacity:0;
+}
+
+.playhead {
+  position:absolute;
+  left:50%;
+  top:0;
+  width:1px;
+  height:100%;
+  background:rgba(255,255,255,.4);
+}
+/* Create a soft contrast zone behind the navbar */
+.about-wrapper::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px; /* only navbar zone */
+  pointer-events: none;
+  z-index: 1;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.50),
+    rgba(0,0,0,0.25),
+    rgba(0,0,0,0)
+  );
+}
+/* ---------------- WORK SECTION ---------------- */
+.work {
+  padding:12vh 6vw;
+}
+
+.work-frame {
+  position:relative;
+  margin-bottom:25vh;
+  width:60%;
+}
+
+.work-frame:nth-child(even) {
+  margin-left:auto;
+}
+
+.work-frame video {
+  width:100%;
+  border-radius:14px;
+  transform:scale(.9);
+  filter:brightness(.85);
+}
+
+.label {
+  margin-top:10px;
+  opacity:.7;
+  font-size:.9rem;
+}
+
+/* ---------------- TYPO MOTION ---------------- */
+.kinetic {
+  padding:20vh 0;
+  text-align:center;
+}
+
+.kinetic h2 {
+  font-size:clamp(4rem,8vw,8rem);
+  font-weight:800;
+  letter-spacing:-2px;
+}
+
+/* ---------------- PROCESS ---------------- */
+/* ---------------- MEDIA BIN ---------------- */
+
+.media-bin {
+  padding:22vh 6vw;
+  background:radial-gradient(circle at center, #0e0e12, #0b0b0d);
+}
+
+.bin-title {
+  font-size:3.2rem;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.bin-sub {
+  opacity:.6;
+  margin-bottom:80px;
+}
+
+.bin-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:22px;
+  perspective:1200px;
+}
+
+.bin-grid video {
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  border-radius:14px;
+  filter:brightness(.55);
+  transform:
+    scale(.92)
+    rotateX(2deg)
+    rotateY(-2deg);
+  transition:all .6s cubic-bezier(.22,1,.36,1);
+  cursor:pointer;
+}
+
+/* organic variation */
+.bin-grid video:nth-child(3n) {
+  transform:scale(.95) rotateX(-2deg) rotateY(1deg);
+}
+
+.bin-grid video:hover {
+  filter:brightness(1);
+  transform:scale(1.05) rotateX(0) rotateY(0);
+  z-index:5;
+}
+
+/* ---------------- CODE PROJECTS ---------------- */
+.code {
+  padding:16vh 8vw;
+  background:#111;
+}
+
+.card {
+  border:1px solid #222;
+  padding:30px;
+  margin-bottom:30px;
+  border-radius:14px;
+}
+
+.card h3 { font-size:1.6rem; }
+.card p { opacity:.7; margin:10px 0; }
+
+.links a {
+  margin-right:20px;
+  text-decoration:none;
+  color:#7df;
+}
+/* ---------------- Z DEPTH STACK ---------------- */
+
+.z-stack {
+  position:relative;
+  height:200vh; /* scroll distance */
+  padding:0 8vw;
+  background:radial-gradient(circle at center, #0e0e12, #0b0b0d);
+}
+
+.z-title {
+  position:absolute;
+  top:10vh;
+  font-size:3rem;
+  font-weight:800;
+}
+
+.z-sub {
+  position:absolute;
+  top:18vh;
+  opacity:.6;
+}
+
+.z-wrapper {
+  position: sticky;
+  top: 30vh;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.z-wrapper video {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 40px 80px rgba(0,0,0,.5);
+  filter: brightness(.6) blur(3px);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+/* ---------------- EDIT TIMELINE ---------------- */
+
+.edit-timeline {
+  position: relative;
+  padding: 20vh 0;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: rgba(255,255,255,.2);
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.timeline-item.left {
+  justify-content: flex-end;
+  padding-right: 55%;
+}
+
+.timeline-item.right {
+  justify-content: flex-start;
+  padding-left: 55%;
+}
+
+.timeline-item video {
+  width: 420px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 16px;
+  transform: scale(.9);
+  transition: .6s cubic-bezier(.22,1,.36,1);
+}
+
+.timeline-item .title {
+  position: absolute;
+  bottom: -40px;
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: .5s ease;
+}
+
+.timeline-item.active .title {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nav-item {
+  position: relative;
+  padding: 10px 18px;
+  color: #fff;
+  font-size: .9rem;
+  opacity: 100;
+  text-decoration: none;      /* 🔴 no underline */
+  background: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: opacity .3s ease;
+}
+
+.nav-item:visited,
+.nav-item:hover,
+.nav-item:active,
+.nav-item:focus {
+  text-decoration: none;      /* 🔴 ensure never appears */
+  color: #fff;
+}
+
+.nav-item.active {
+  opacity: 1;
+}
+body[data-active="home"] .pill { transform: translateX(0); }
+body[data-active="works"] .pill { transform: translateX(94px); }
+
+
+
+
+/* ---------------- RESPONSIVE ---------------- */
+@media(max-width:768px){
+  .work-frame { width:100%; }
+}
+
+footer {
+  padding: 40px 10%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  opacity: 0.6;
+}
+/* ================= MOBILE TIMELINE FIX ================= */
+@media (max-width: 768px) {
+
+  .navbar { top: 12px; padding: 4px; gap: 4px; }
+  .nav-item { width: 72px; font-size: 12px; padding: 8px 0; }
+  .pill { width: 72px; top: 4px; left: 4px; height: calc(100% - 8px); }
+
+  body[data-active="home"] .pill { transform: translateX(0); }
+  body[data-active="works"] .pill { transform: translateX(76px); }
+  body[data-active="about"] .pill { transform: translateX(152px); }
+  .edit-timeline {
+    position: relative;
+    padding: 10vh 0;
+  }
+
+  /* Vertical line on left */
+  .timeline-line {
+    left: 22px;
+    width: 2px;
+    transform: none;
+  }
+
+  /* Force single column */
+  .timeline-item {
+    width: 100%;
+    min-height: auto;
+    margin-bottom: 10vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding-left: 55px;
+    padding-right: 16px;
+  }
+
+  /* Kill desktop left/right logic completely */
+  .timeline-item.left,
+  .timeline-item.right {
+    justify-content: flex-start;
+    padding-left: 55px;
+    padding-right: 16px;
+  }
+
+  /* Video full width */
+  .timeline-item video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 14px;
+    transform: none;
+  }
+
+  /* Title behaves like normal text */
+  .timeline-item .title {
+    position: relative;
+    margin-top: 12px;
+    bottom: auto;
+    opacity: 1;
+    transform: none;
+    font-size: 1.1rem;
+  }
+}
+/* ================= REMOVE BLUE TAP / FOCUS HIGHLIGHT ================= */
+
+/* Navbar items */
+.nav-item,
+.nav-item:focus,
+.nav-item:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent; /* Android / iOS */
+}
+
+/* All clickable elements safety */
+a,
+button,
+a:focus,
+button:focus,
+a:active,
+button:active {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent selection glow on mobile */
+* {
+  -webkit-touch-callout: none;
+}
+
+</style>
+</head>
+
+<body data-active="works">
+
+  <div id="page-transition"></div>
+
+  
+<nav class="navbar">
+  <div class="pill"></div>
+
+  <a href="index1.html" class="nav-item" data-page="home">Home</a>
+  <a href="works.html" class="nav-item" data-page="works">Works</a>
+  <a href="about.html" class="nav-item" data-page="about">About</a>
+  <a href="contact.html" class="nav-item" data-page="contact">Contact</a>
+</nav>
+
+
+
+<div class="noise"></div>
+<div class="cursor"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <video autoplay muted loop playsinline>
+    <source src="videos/toji edit 4k ⧸⧸ is there someone else？ ＊scrap＊.mp4" type="video/mp4">
+  </video>
+
+  <div class="hero-overlay"></div>
+  <div class="playhead"></div>
+
+  <div class="hero-text">
+    <h1>I edit emotions.<br>I design motion.</h1>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work">
+  <div class="work-frame">
+    <video autoplay muted loop playsinline >
+      <source src="videos/kaori miyazono 4k edit __ i dont wanna dance (free project file).mp4">
+    </video>
+    <div class="label">Amv edit</div>
+  </div>
+
+  <div class="work-frame">
+    <video autoplay muted loop playsinline>
+      <source src="videos/loki s2 edit 4K＊.mp4">
+    </video>
+    <div class="label">loki edit</div>
+  </div>
+</section>
+
+<!-- KINETIC -->
+<section class="kinetic">
+  <h2>I DESIGN</h2>
+  <h2>I CREATE</h2>
+  <h2>I ANIMATE</h2>
+</section>
+<!--SEQUENCE-->
+
+
+
+<!-- PROCESS -->
+<section class="edit-timeline section">
+
+  <div class="timeline-line"></div>
+
+  <div class="timeline-item left" data-title="Keiani Edit">
+    <video muted loop playsinline src="videos/keiani edit...mp4"></video>
+    <span class="title">Keiani Edit</span>
+  </div>
+
+  <div class="timeline-item right" data-title="Final Prob">
+    <video muted loop playsinline src="videos/Final 1 Prob4.mp4"></video>
+    <span class="title">Self Edit</span>
+  </div>
+
+  <div class="timeline-item left" data-title="Giyuu">
+    <video muted loop playsinline src="videos/giyuu.mp4.mp4"></video>
+    <span class="title">Giyu Edit</span>
+  </div>
+
+  <div class="timeline-item right" data-title="Heaven & Black">
+    <video muted loop playsinline src="videos/birthday edit __ heaven and black (collab).mp4"></video>
+    <span class="title">Miku Edit</span>
+  </div>
+
+  <div class="timeline-item left" data-title="Nobara">
+    <video muted loop playsinline src="videos/Nobara - Party Monster.mp4"></video>
+    <span class="title">Nobara Edit</span>
+  </div>
+
+  <div class="timeline-item right" data-title="Waves">
+    <video muted loop playsinline src="videos/mep __ waves.mp4"></video>
+    <span class="title">Waves mep</span>
+  </div>
+
+  <div class="timeline-item left" data-title="Onodera x Raku">
+    <video muted loop playsinline src="videos/Onodera x Raku.mp4"></video>
+    <span class="title">Onodera × Raku Edit</span>
+  </div>
+
+</section>
+
+
+
+
+<!-- CODE -->
+<section class="code">
+  <div class="card">
+    <h3>Coding Projects</h3>
+    <p>live soon</p>
+    <div class="links">
+      <a href="#"></a>
+      <a href="https://github.com/gurshxn-js">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<script>
+/* CURSOR */
+const cursor = document.querySelector('.cursor');
+window.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+/* GSAP */
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.to(".hero-text h1", {
+  filter:"blur(0px)",
+  opacity:1,
+  y:-20,
+  duration:1.4,
+  ease:"power3.out",
+  delay:.5
+});
+
+const timelineItems = gsap.utils.toArray(".timeline-item");
+
+timelineItems.forEach((item) => {
+  const video = item.querySelector("video");
+
+  ScrollTrigger.create({
+    trigger: item,
+    start: "top center",
+    end: "bottom center",
+
+    onEnter: () => activate(item, video),
+    onEnterBack: () => activate(item, video),
+    onLeave: () => deactivate(item, video),
+    onLeaveBack: () => deactivate(item, video),
+  });
+});
+
+function activate(item, video) {
+  item.classList.add("active");
+  video.play();
+}
+
+function deactivate(item, video) {
+  item.classList.remove("active");
+  video.pause();
+  video.currentTime = 0;
+}
+
+
+
+
+
+//
+gsap.utils.toArray(".work-frame video").forEach(video => {
+  gsap.to(video, {
+    scale:1,
+    scrollTrigger:{
+      trigger:video,
+      start:"top 80%",
+      end:"bottom 60%",
+      scrub:true
+    }
+  });
+});
+
+//
+gsap.from(".bin-grid video", {
+  opacity: 0,
+  y: 80,
+  scale: 0.9,
+  stagger: 0.08,
+  ease: "power3.out",
+  scrollTrigger: {
+    trigger: ".media-bin",
+    start: "top 70%",
+  }
+});
+
+/* hover preview */
+document.querySelectorAll(".bin-grid video").forEach(v => {
+  v.addEventListener("mouseenter", () => v.play());
+  v.addEventListener("mouseleave", () => {
+    v.pause();
+    v.currentTime = 0;
+  });
+});
+
+</script>
+<script>
+
+
+
+
+
+
+
+/* ===== IDENTITY REVEAL (SINGLE OBSERVER) ===== */
+const identity = document.querySelector(".identity");
+
+const revealObserver = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      identity.classList.add("reveal");
+      revealObserver.disconnect();
+    }
+  },
+  { rootMargin: "0px 0px -30% 0px" }
+);
+
+revealObserver.observe(identity);
+
+/* ===== SAFE PARALLAX (NO ANIMATION KILL) ===== */
+const flower = document.querySelector(".flower-wrap");
+let raf = null;
+
+document.addEventListener("mousemove", e => {
+  if (raf) return;
+  raf = requestAnimationFrame(() => {
+    const x = (window.innerWidth / 2 - e.clientX) / 40;
+    const y = (window.innerHeight / 2 - e.clientY) / 40;
+    flower.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    raf = null;
+  });
+});
+</script>
+
+
+
+
+
+
+<footer>
+  <span>© 2025 Gurshan Singh</span>
+  <span>Designed & built with intent</span>
+</footer>
+
+</body>
+</html>
