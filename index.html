@@ -6,7 +6,14 @@
 <title>Design In Motion</title>
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="preload" href="fonts/BrasikaDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin>
+ <link
+  rel="preload"
+  href="fonts/BrasikaDisplay-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+>
+
 
 <style>
   @font-face {
@@ -16,7 +23,7 @@
     url("fonts/BrasikaDisplay-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 html {
@@ -471,6 +478,11 @@ button:active {
   -webkit-touch-callout: none;
 }
 
+.text h1 {
+  font-family: "Brasika Display", serif;
+  font-weight: 400;
+  visibility: hidden; /* 🔒 */
+}
 
 </style>
 </head>
@@ -563,6 +575,11 @@ document.addEventListener("mousemove", e => {
 });
 </script>
 
+<script>
+document.fonts.load('1em "Brasika Display"').then(() => {
+  document.querySelector(".text h1").style.visibility = "visible";
+});
+</script>
 
 
 
