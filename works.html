@@ -821,36 +821,6 @@ window.addEventListener("load", () => {
   });
 });
 </script>
-<script>
-/* ================= HARD LOAD OPTIMIZATION ================= */
-
-/* 1️⃣ STOP HERO VIDEO FROM BLOCKING FIRST PAINT */
-const heroVideo = document.querySelector(".hero video");
-if (heroVideo) {
-  const src = heroVideo.querySelector("source").src;
-  heroVideo.querySelector("source").removeAttribute("src");
-  heroVideo.load();
-
-  window.addEventListener("load", () => {
-    heroVideo.querySelector("source").src = src;
-    heroVideo.load();
-    heroVideo.play().catch(()=>{});
-  });
-}
-
-/* 2️⃣ LAZY LOAD ALL OTHER VIDEOS (REAL FIX) */
-
-
-/* 3️⃣ DISABLE HEAVY CSS EFFECTS UNTIL LOAD */
-document.documentElement.style.setProperty("--preload", "1");
-
-window.addEventListener("load", () => {
-  document.documentElement.style.removeProperty("--preload");
-});
-</script>
-
-
-
 
 <footer>
   <span>© 2025 Gurshan Singh</span>
