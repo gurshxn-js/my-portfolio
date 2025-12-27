@@ -9,8 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <!-- GSAP -->
-<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script defer src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 
 <style>
 /* ---------------- RESET ---------------- */
@@ -505,6 +505,7 @@ button:active {
   -webkit-touch-callout: none;
 }
 
+
 </style>
 </head>
 
@@ -530,7 +531,7 @@ button:active {
 <!-- HERO -->
 <section class="hero">
   <video autoplay muted loop playsinline>
-    <source src="videos/toji edit 4k ⧸⧸ is there someone else？ ＊scrap＊.mp4" type="video/mp4">
+    <source src="videos/toji edit.mp4" type="video/mp4">
   </video>
 
   <div class="hero-overlay"></div>
@@ -634,16 +635,6 @@ window.addEventListener('mousemove', e => {
 });
 
 /* GSAP */
-gsap.registerPlugin(ScrollTrigger);
-
-gsap.to(".hero-text h1", {
-  filter:"blur(0px)",
-  opacity:1,
-  y:-20,
-  duration:1.4,
-  ease:"power3.out",
-  delay:.5
-});
 
 const timelineItems = gsap.utils.toArray(".timeline-item");
 
@@ -751,7 +742,112 @@ document.addEventListener("mousemove", e => {
 });
 </script>
 
+<script>
+/* ================= PERFORMANCE FIX FOR GITHUB PAGES ================= */
 
+/* 1️⃣ LAZY LOAD ALL VIDEOS */
+const videos = document.querySelectorAll("video");
+
+const videoObserver = new IntersectionObserver(
+  entries => {
+    entries.forEach(entry => {
+      const video = entry.target;
+
+      if (entry.isIntersecting) {
+        if (!video.src && video.dataset.src) {
+          video.src = video.dataset.src;
+          video.load();
+        }
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  },
+  { rootMargin: "200px" }
+);
+
+videos.forEach(video => {
+  if (video.querySelector("source")) {
+    const source = video.querySelector("source");
+    video.dataset.src = source.src;
+    source.removeAttribute("src"); // prevent initial load
+  }
+  video.removeAttribute("autoplay");
+  video.setAttribute("preload", "none");
+  videoObserver.observe(video);
+});
+
+/* 2️⃣ DEFER HEAVY ANIMATIONS UNTIL PAGE LOAD */
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
+
+/* 3️⃣ KILL UNUSED JS SAFELY */
+document.querySelectorAll(".identity, .flower-wrap").forEach(el => {
+  if (!el) return;
+});
+
+/* 4️⃣ REDUCE GPU LOAD ON MOBILE */
+if (window.innerWidth < 768) {
+  document.body.style.animation = "none";
+}
+</script>
+
+<script>
+/* ================= FIX HERO TEXT ANIMATION ================= */
+
+window.addEventListener("load", () => {
+  const title = document.querySelector(".hero-text h1");
+
+  if (!title) return;
+
+  // Force initial state (important after lazy + defer)
+  gsap.set(title, {
+    opacity: 0,
+    filter: "blur(16px)",
+    y: 30
+  });
+
+  // Animate AFTER fonts + layout are ready
+  gsap.to(title, {
+    opacity: 1,
+    filter: "blur(0px)",
+    y: 0,
+    duration: 1.4,
+    ease: "power3.out",
+    delay: 0.2
+  });
+});
+</script>
+<script>
+/* ================= HARD LOAD OPTIMIZATION ================= */
+
+/* 1️⃣ STOP HERO VIDEO FROM BLOCKING FIRST PAINT */
+const heroVideo = document.querySelector(".hero video");
+if (heroVideo) {
+  const src = heroVideo.querySelector("source").src;
+  heroVideo.querySelector("source").removeAttribute("src");
+  heroVideo.load();
+
+  window.addEventListener("load", () => {
+    heroVideo.querySelector("source").src = src;
+    heroVideo.load();
+    heroVideo.play().catch(()=>{});
+  });
+}
+
+/* 2️⃣ LAZY LOAD ALL OTHER VIDEOS (REAL FIX) */
+
+
+/* 3️⃣ DISABLE HEAVY CSS EFFECTS UNTIL LOAD */
+document.documentElement.style.setProperty("--preload", "1");
+
+window.addEventListener("load", () => {
+  document.documentElement.style.removeProperty("--preload");
+});
+</script>
 
 
 
