@@ -742,58 +742,7 @@ document.addEventListener("mousemove", e => {
 });
 </script>
 
-<script>
-/* ================= PERFORMANCE FIX FOR GITHUB PAGES ================= */
 
-/* 1️⃣ LAZY LOAD ALL VIDEOS */
-const videos = document.querySelectorAll("video");
-
-const videoObserver = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      const video = entry.target;
-
-      if (entry.isIntersecting) {
-        if (!video.src && video.dataset.src) {
-          video.src = video.dataset.src;
-          video.load();
-        }
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-        video.currentTime = 0;
-      }
-    });
-  },
-  { rootMargin: "200px" }
-);
-
-videos.forEach(video => {
-  if (video.querySelector("source")) {
-    const source = video.querySelector("source");
-    video.dataset.src = source.src;
-    source.removeAttribute("src"); // prevent initial load
-  }
-  video.removeAttribute("autoplay");
-  video.setAttribute("preload", "none");
-  videoObserver.observe(video);
-});
-
-/* 2️⃣ DEFER HEAVY ANIMATIONS UNTIL PAGE LOAD */
-window.addEventListener("load", () => {
-  document.body.classList.add("loaded");
-});
-
-/* 3️⃣ KILL UNUSED JS SAFELY */
-document.querySelectorAll(".identity, .flower-wrap").forEach(el => {
-  if (!el) return;
-});
-
-/* 4️⃣ REDUCE GPU LOAD ON MOBILE */
-if (window.innerWidth < 768) {
-  document.body.style.animation = "none";
-}
-</script>
 
 <script>
 /* ================= FIX HERO TEXT ANIMATION ================= */
