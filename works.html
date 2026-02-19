@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Works - Gurshan Singh</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-
-<!-- GSAP -->
-<script defer src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-<script defer src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Works — Gurshan Singh</title>
 
 <style>
-/* ---------------- RESET ---------------- */
 * { margin:0; padding:0; box-sizing:border-box; }
-html,body {
- font-family:'Poppins',sans-serif;
-overflow-x:hidden;
-background: linear-gradient(
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+
+  overflow-x:hidden;
+  color:#fff;
+
+  background: linear-gradient(
     120deg,
     #0b0b0b,
     #140c1f,
@@ -28,752 +31,683 @@ background: linear-gradient(
   );
   background-size: 400% 400%;
   animation: gradientMove 18s ease infinite;
-  color: #fff; }
+}
 
-/* ---------------- GLOBAL FX ---------------- */
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.10), transparent 65%),
+    radial-gradient(circle at bottom, rgba(0,0,0,0.65), transparent 75%);
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .noise {
-  position:fixed; inset:0;
+  position:fixed;
+  inset:0;
   background:url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity:.06; pointer-events:none; z-index:50;
+  opacity:.04;
+  pointer-events:none;
+  z-index:50;
 }
 
-
-#page-transition {
-  position: fixed;
-  inset: 0;
-  background: #0b0b0b;
-  z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .6s cubic-bezier(.22,1,.36,1);
-}
-
-#page-transition.active {
-  opacity: 1;
-  pointer-events: all; /* 🔥 LOCK UI */
-}
-
+/* NAVBAR */
 .navbar {
   position: fixed;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(16px);
-  padding: 6px;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
-  z-index: 100;
-}
+  z-index: 999;
 
-.pill {
-  position: absolute;
-  top: 6px;
-  left: 2px;
-  width: 88px;
-  height: calc(100% - 12px);
-  background: rgba(255,255,255,0.28);
+  padding: 8px;
   border-radius: 999px;
 
-  /* 🔥 IMPORTANT */
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(18px);
 
-.pill.no-anim {
-  transition: none !important;
+  display: flex;
+  gap: 8px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
 }
 
 .nav-item {
-  position: relative;
-  z-index: 1;
-  width: 88px;
-  text-align: center;
-  padding: 10px 0;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: "Poppins", sans-serif;
-}
-
-/* ---------------- HERO ---------------- */
-.hero {
-  height:100vh;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero video {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:brightness(.7);
-}
-
-.hero-overlay {
-  position:absolute;
-  inset:0;
-  background:radial-gradient(circle at center, transparent 40%, #0b0b0d 90%);
-}
-
-.hero-text {
-  position:absolute;
-  left:8%;
-  bottom:20%;
-}
-
-.hero-text h1 {
-  font-size:clamp(3rem,6vw,6rem);
-  font-weight:800;
-  line-height:1.05;
-  filter:blur(20px);
-  opacity:0;
-}
-
-.playhead {
-  position:absolute;
-  left:50%;
-  top:0;
-  width:1px;
-  height:100%;
-  background:rgba(255,255,255,.4);
-}
-/* Create a soft contrast zone behind the navbar */
-.about-wrapper::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 110px; /* only navbar zone */
-  pointer-events: none;
-  z-index: 1;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.50),
-    rgba(0,0,0,0.25),
-    rgba(0,0,0,0)
-  );
-}
-/* ---------------- WORK SECTION ---------------- */
-.work {
-  padding:12vh 6vw;
-}
-
-.work-frame {
-  position:relative;
-  margin-bottom:25vh;
-  width:60%;
-}
-
-.work-frame:nth-child(even) {
-  margin-left:auto;
-}
-
-.work-frame video {
-  width:100%;
-  border-radius:14px;
-  transform:scale(.9);
-  filter:brightness(.85);
-}
-
-.label {
-  margin-top:10px;
-  opacity:.7;
-  font-size:.9rem;
-}
-
-/* ---------------- TYPO MOTION ---------------- */
-.kinetic {
-  padding:20vh 0;
-  text-align:center;
-}
-
-.kinetic h2 {
-  font-size:clamp(4rem,8vw,8rem);
-  font-weight:800;
-  letter-spacing:-2px;
-}
-
-/* ---------------- PROCESS ---------------- */
-/* ---------------- MEDIA BIN ---------------- */
-
-.media-bin {
-  padding:22vh 6vw;
-  background:radial-gradient(circle at center, #0e0e12, #0b0b0d);
-}
-
-.bin-title {
-  font-size:3.2rem;
-  font-weight:800;
-  margin-bottom:10px;
-}
-
-.bin-sub {
-  opacity:.6;
-  margin-bottom:80px;
-}
-
-.bin-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:22px;
-  perspective:1200px;
-}
-
-.bin-grid video {
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  border-radius:14px;
-  filter:brightness(.55);
-  transform:
-    scale(.92)
-    rotateX(2deg)
-    rotateY(-2deg);
-  transition:all .6s cubic-bezier(.22,1,.36,1);
-  cursor:pointer;
-}
-
-/* organic variation */
-.bin-grid video:nth-child(3n) {
-  transform:scale(.95) rotateX(-2deg) rotateY(1deg);
-}
-
-.bin-grid video:hover {
-  filter:brightness(1);
-  transform:scale(1.05) rotateX(0) rotateY(0);
-  z-index:5;
-}
-
-/* ---------------- CODE PROJECTS ---------------- */
-.code {
-  padding:16vh 8vw;
-  background:#111;
-}
-
-.card {
-  border:1px solid #222;
-  padding:30px;
-  margin-bottom:30px;
-  border-radius:14px;
-}
-
-.card h3 { font-size:1.6rem; }
-.card p { opacity:.7; margin:10px 0; }
-
-.links a {
-  margin-right:20px;
-  text-decoration:none;
-  color:#7df;
-}
-/* ---------------- Z DEPTH STACK ---------------- */
-
-.z-stack {
-  position:relative;
-  height:200vh; /* scroll distance */
-  padding:0 8vw;
-  background:radial-gradient(circle at center, #0e0e12, #0b0b0d);
-}
-
-.z-title {
-  position:absolute;
-  top:10vh;
-  font-size:3rem;
-  font-weight:800;
-}
-
-.z-sub {
-  position:absolute;
-  top:18vh;
-  opacity:.6;
-}
-
-.z-wrapper {
-  position: sticky;
-  top: 30vh;
-  height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1200px;
-  transform-style: preserve-3d;
-}
-
-.z-wrapper video {
-  position: absolute;
-  width: 70%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 40px 80px rgba(0,0,0,.5);
-  filter: brightness(.6) blur(3px);
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-/* ---------------- EDIT TIMELINE ---------------- */
-
-.edit-timeline {
-  position: relative;
-  padding: 20vh 0;
-}
-
-.timeline-line {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  background: rgba(255,255,255,.2);
-  transform: translateX(-50%);
-}
-
-.timeline-item {
-  position: relative;
-  width: 100%;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-}
-
-.timeline-item.left {
-  justify-content: flex-end;
-  padding-right: 55%;
-}
-
-.timeline-item.right {
-  justify-content: flex-start;
-  padding-left: 55%;
-}
-
-.timeline-item video {
-  width: 420px;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  border-radius: 16px;
-  transform: scale(.9);
-  transition: .6s cubic-bezier(.22,1,.36,1);
-}
-
-.timeline-item .title {
-  position: absolute;
-  bottom: -40px;
-  font-size: 1.3rem;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: .5s ease;
-}
-
-.timeline-item.active .title {
-  opacity: 1;
-  transform: translateY(0);
-}
-.nav-item {
-  position: relative;
+  text-decoration: none;
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 500;
   padding: 10px 18px;
-  color: #fff;
-  font-size: .9rem;
-  opacity: 100;
-  text-decoration: none;      /* 🔴 no underline */
-  background: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: opacity .3s ease;
+  border-radius: 999px;
+  transition: 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.nav-item:visited,
-.nav-item:hover,
-.nav-item:active,
-.nav-item:focus {
-  text-decoration: none;      /* 🔴 ensure never appears */
+.nav-item:hover {
   color: #fff;
+  background: rgba(255,255,255,0.08);
 }
 
 .nav-item.active {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+}
+
+/* HERO */
+.hero {
+  padding: 165px 10% 70px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  font-weight: 760;
+  letter-spacing: -1.8px;
+  line-height: 1.03;
+}
+
+.hero p {
+  margin-top: 18px;
+  max-width: 700px;
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.65);
+}
+
+/* SHOWCASE */
+.showcase {
+  padding: 0 10% 120px;
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 26px;
+  align-items: start;
+}
+
+.preview {
+  border-radius: 28px;
+  overflow: hidden;
+  position: sticky;
+  top: 110px;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px);
+
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+}
+
+.preview-media {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.35);
+  cursor: pointer;
+}
+
+.preview-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  background: #000;
+}
+
+.preview-media::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.2),
+    rgba(0,0,0,0)
+  );
+  pointer-events:none;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(14px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.loading.active { opacity: 1; }
+
+.loader {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top: 2px solid rgba(255,255,255,0.85);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* BUTTONS */
+.mute-btn, .open-btn {
+  position: absolute;
+  z-index: 20;
+
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  color: rgba(255,255,255,0.9);
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(14px);
+
+  cursor: pointer;
+  transition: 0.25s ease;
+  user-select: none;
+}
+
+.mute-btn { top: 16px; right: 16px; }
+.open-btn { bottom: 16px; right: 16px; pointer-events:none; }
+
+.preview-info {
+  padding: 22px 24px 28px;
+}
+
+.preview-info h2 {
+  font-size: 1.35rem;
+  font-weight: 720;
+  letter-spacing: -0.5px;
+}
+
+.preview-info p {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.65);
+}
+
+/* PROJECT LIST */
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project {
+  padding: 18px 18px;
+  border-radius: 22px;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px);
+
+  cursor: pointer;
+  transition: 0.35s cubic-bezier(.22,1,.36,1);
+}
+
+.project:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.07);
+}
+
+.project.active {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.project h3 {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.project span {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.62);
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(22px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(.22,1,.36,1);
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-window {
+  width: min(1050px, 92vw);
+  border-radius: 26px;
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(22px);
+
+  transform: translateY(18px) scale(0.93);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(.22,1,.36,1);
+
+  box-shadow: 0 45px 140px rgba(0,0,0,0.9);
+}
+
+.modal.active .modal-window {
+  transform: translateY(0) scale(1);
   opacity: 1;
 }
-body[data-active="home"] .pill { transform: translateX(0); }
-body[data-active="works"] .pill { transform: translateX(94px); }
 
+.window-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 
-
-/* ---------------- RESPONSIVE ---------------- */
-@media(max-width:768px){
-  .work-frame { width:100%; }
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(18px);
 }
 
+.window-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.window-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.dot-red { background: #ff5f57; }
+.dot-yellow { background: #febc2e; }
+.dot-green { background: #28c840; }
+
+.window-title {
+  font-size: 13px;
+  font-weight: 650;
+  color: rgba(255,255,255,0.88);
+}
+
+.window-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.window-btn {
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  color: rgba(255,255,255,0.88);
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(14px);
+
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.modal video {
+  width: 100%;
+  max-height: 72vh;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+/* FOOTER */
 footer {
   padding: 40px 10%;
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  opacity: 0.6;
+  color: rgba(255,255,255,0.55);
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
-/* ================= MOBILE TIMELINE FIX ================= */
-@media (max-width: 768px) {
 
-  .navbar { top: 12px; padding: 4px; gap: 4px; }
-  .nav-item { width: 72px; font-size: 12px; padding: 8px 0; }
-  .pill { width: 72px; top: 4px; left: 4px; height: calc(100% - 8px); }
+/* RESPONSIVE */
+@media(max-width: 980px){
+  .showcase { grid-template-columns: 1fr; }
+  .preview { position: relative; top: auto; }
+  .preview-media { height: 420px; }
+}
 
-  body[data-active="home"] .pill { transform: translateX(0); }
-  body[data-active="works"] .pill { transform: translateX(76px); }
-  body[data-active="about"] .pill { transform: translateX(152px); }
-  .edit-timeline {
-    position: relative;
-    padding: 10vh 0;
-  }
+@media(max-width: 768px){
+  .hero { padding: 145px 7% 65px; }
+  .showcase { padding: 0 7% 100px; }
 
-  /* Vertical line on left */
-  .timeline-line {
-    left: 22px;
-    width: 2px;
-    transform: none;
-  }
+  .preview-media { height: 330px; }
 
-  /* Force single column */
-  .timeline-item {
-    width: 100%;
-    min-height: auto;
-    margin-bottom: 10vh;
-
-    display: flex;
+  footer {
     flex-direction: column;
-    align-items: flex-start;
-
-    padding-left: 55px;
-    padding-right: 16px;
+    gap: 10px;
+    text-align: center;
   }
 
-  /* Kill desktop left/right logic completely */
-  .timeline-item.left,
-  .timeline-item.right {
-    justify-content: flex-start;
-    padding-left: 55px;
-    padding-right: 16px;
-  }
+  .modal video { max-height: 60vh; }
 
-  /* Video full width */
-  .timeline-item video {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 14px;
-    transform: none;
-  }
-
-  /* Title behaves like normal text */
-  .timeline-item .title {
-    position: relative;
-    margin-top: 12px;
-    bottom: auto;
-    opacity: 1;
-    transform: none;
-    font-size: 1.1rem;
+  .window-btn {
+    font-size: 12px;
+    padding: 8px 12px;
   }
 }
-/* ================= REMOVE BLUE TAP / FOCUS HIGHLIGHT ================= */
 
-/* Navbar items */
-.nav-item,
-.nav-item:focus,
-.nav-item:active {
-  outline: none;
-  box-shadow: none;
-  -webkit-tap-highlight-color: transparent; /* Android / iOS */
-}
-
-/* All clickable elements safety */
-a,
-button,
-a:focus,
-button:focus,
-a:active,
-button:active {
+a, button {
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent selection glow on mobile */
-* {
-  -webkit-touch-callout: none;
-}
-
-
 </style>
 </head>
 
-<body data-active="works">
-
-  <div id="page-transition"></div>
-
-  
-<nav class="navbar">
-  <div class="pill"></div>
-
-  <a href="index.html" class="nav-item" data-page="home">Home</a>
-  <a href="works.html" class="nav-item" data-page="works">Works</a>
-  <a href="about.html" class="nav-item" data-page="about">About</a>
-  <a href="contact.html" class="nav-item" data-page="contact">Contact</a>
-</nav>
-
-
+<body>
 
 <div class="noise"></div>
-<div class="cursor"></div>
 
-<!-- HERO -->
+<nav class="navbar">
+  <a href="index.html" class="nav-item">Home</a>
+  <a href="works.html" class="nav-item active">Works</a>
+  <a href="about.html" class="nav-item">About</a>
+  <a href="contact.html" class="nav-item">Contact</a>
+</nav>
+
 <section class="hero">
-  <video autoplay muted loop playsinline>
-    <source src="videos/toji edit.mp4" type="video/mp4">
-  </video>
-
-  <div class="hero-overlay"></div>
-  <div class="playhead"></div>
-
-  <div class="hero-text">
-    <h1>I edit emotions.<br>I design motion.</h1>
-  </div>
+  <h1>Work that feels cinematic.<br>Designed with intent.</h1>
+  <p>
+    A curated collection of edits, motion experiments, and storytelling visuals —
+    built with clean pacing, sharp transitions, and premium design language.
+  </p>
 </section>
 
-<!-- WORK -->
-<section class="work">
-  <div class="work-frame">
-    <video autoplay muted loop playsinline >
-      <source src="videos/kaori miyazono 4k edit __ i dont wanna dance (free project file).mp4">
-    </video>
-    <div class="label">Amv edit</div>
-  </div>
+<section class="showcase">
 
-  <div class="work-frame">
-    <video autoplay muted loop playsinline>
-      <source src="videos/loki s2 edit 4K＊.mp4">
-    </video>
-    <div class="label">loki edit</div>
-  </div>
-</section>
+  <div class="preview">
+    <div class="preview-media" id="previewMedia">
 
-<!-- KINETIC -->
-<section class="kinetic">
-  <h2>I DESIGN</h2>
-  <h2>I CREATE</h2>
-  <h2>I ANIMATE</h2>
-</section>
-<!--SEQUENCE-->
+      <video id="previewVideo" autoplay muted loop playsinline preload="auto">
+        <source id="previewSource" src="videos/Comp 1 1 Prob4(1).mp4" type="video/mp4">
+      </video>
 
+      <div class="loading" id="loading">
+        <div class="loader"></div>
+      </div>
 
+      <button class="mute-btn" id="muteBtn">🔇 Muted</button>
+      <div class="open-btn">⤢ Open</div>
 
-<!-- PROCESS -->
-<section class="edit-timeline section">
+    </div>
 
-  <div class="timeline-line"></div>
-
-  <div class="timeline-item left" data-title="Keiani Edit">
-    <video muted loop playsinline src="videos/keiani edit...mp4"></video>
-    <span class="title">Keiani Edit</span>
-  </div>
-
-  <div class="timeline-item right" data-title="Final Prob">
-    <video muted loop playsinline src="videos/Final 1 Prob4.mp4"></video>
-    <span class="title">Self Edit</span>
-  </div>
-
-  <div class="timeline-item left" data-title="Giyuu">
-    <video muted loop playsinline src="videos/giyuu.mp4.mp4"></video>
-    <span class="title">Giyu Edit</span>
-  </div>
-
-  <div class="timeline-item right" data-title="Heaven & Black">
-    <video muted loop playsinline src="videos/birthday edit __ heaven and black (collab).mp4"></video>
-    <span class="title">Miku Edit</span>
-  </div>
-
-  <div class="timeline-item left" data-title="Nobara">
-    <video muted loop playsinline src="videos/Nobara - Party Monster.mp4"></video>
-    <span class="title">Nobara Edit</span>
-  </div>
-
-  <div class="timeline-item right" data-title="Waves">
-    <video muted loop playsinline src="videos/mep __ waves.mp4"></video>
-    <span class="title">Waves mep</span>
-  </div>
-
-  <div class="timeline-item left" data-title="Onodera x Raku">
-    <video muted loop playsinline src="videos/Onodera x Raku.mp4"></video>
-    <span class="title">Onodera × Raku Edit</span>
-  </div>
-
-</section>
-
-
-
-
-<!-- CODE -->
-<section class="code">
-  <div class="card">
-    <h3>Coding Projects</h3>
-    <p>live soon</p>
-    <div class="links">
-      <a href="#"></a>
-      <a href="https://github.com/gurshxn-js">GitHub</a>
+    <div class="preview-info">
+      <h2 id="previewTitle">Mograph Edit</h2>
+      <p id="previewDesc">Cinematic pacing with smooth transitions and clean color tone.</p>
     </div>
   </div>
+
+  <div class="project-list">
+
+    <div class="project active"
+      data-title="Mograph Edit"
+      data-desc="Cinematic pacing with smooth transitions and clean color tone."
+      data-video="videos/Comp 1 1 Prob4(1).mp4">
+      <h3>Mograph Edit</h3>
+      <span>Featured Motion Graphics Edit</span>
+    </div>
+
+    <div class="project"
+      data-title="Dalhousie Edit"
+      data-desc="Flow style edit with complementary colors, smooth motion, and clean cuts."
+      data-video="videos/Comp 1 9 Prob4.mp4">
+      <h3>Dalhousie Edit</h3>
+      <span>Complementary Flow Style</span>
+    </div>
+
+    <div class="project"
+      data-title="Loki S2"
+      data-desc="Sharp cinematic edit with premium transitions and punchy pacing."
+      data-video="videos/loki s2 edit 4K＊.mp4">
+      <h3>Loki S2</h3>
+      <span>Series Edit / Cinematic</span>
+    </div>
+
+    <div class="project"
+      data-title="Keiani Edit"
+      data-desc="Smooth motion + stylized pacing, built with modern rhythm cuts."
+      data-video="videos/keiani edit...mp4">
+      <h3>Keiani Edit</h3>
+      <span>Stylized Motion Edit</span>
+    </div>
+
+    <div class="project"
+      data-title="Giyu Edit"
+      data-desc="Fast pacing edit with clean effects and dramatic contrast."
+      data-video="videos/giyuu.mp4.mp4">
+      <h3>Giyu Edit</h3>
+      <span>Anime Edit</span>
+    </div>
+
+    <div class="project"
+      data-title="Nobara Edit"
+      data-desc="Beat-sync edit with aggressive motion design and sharp transitions."
+      data-video="videos/Nobara - Party Monster.mp4">
+      <h3>Nobara Edit</h3>
+      <span>Beat Sync Edit</span>
+    </div>
+
+    <div class="project"
+      data-title="Waves MEP"
+      data-desc="A smooth multi-editor project with strong mood pacing and transitions."
+      data-video="videos/mep __ waves.mp4">
+      <h3>Waves MEP</h3>
+      <span>Multi Editor Project</span>
+    </div>
+
+  </div>
+
 </section>
 
-<script>
-/* CURSOR */
-const cursor = document.querySelector('.cursor');
-window.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-});
+<div class="modal" id="modal">
+  <div class="modal-window">
 
-/* GSAP */
+    <div class="window-bar">
+      <div class="window-left" id="closeDots">
+        <div class="window-dot dot-red"></div>
+        <div class="window-dot dot-yellow"></div>
+        <div class="window-dot dot-green"></div>
+      </div>
 
-const timelineItems = gsap.utils.toArray(".timeline-item");
+      <div class="window-title" id="modalTitle">Project Preview</div>
 
-timelineItems.forEach((item) => {
-  const video = item.querySelector("video");
+      <div class="window-actions">
+        <button class="window-btn" id="modalMuteBtn">🔇 Muted</button>
+        <button class="window-btn" id="closeBtn">✕ Close</button>
+      </div>
+    </div>
 
-  ScrollTrigger.create({
-    trigger: item,
-    start: "top center",
-    end: "bottom center",
-
-    onEnter: () => activate(item, video),
-    onEnterBack: () => activate(item, video),
-    onLeave: () => deactivate(item, video),
-    onLeaveBack: () => deactivate(item, video),
-  });
-});
-
-function activate(item, video) {
-  item.classList.add("active");
-  video.play();
-}
-
-function deactivate(item, video) {
-  item.classList.remove("active");
-  video.pause();
-  video.currentTime = 0;
-}
-
-
-
-
-
-//
-gsap.utils.toArray(".work-frame video").forEach(video => {
-  gsap.to(video, {
-    scale:1,
-    scrollTrigger:{
-      trigger:video,
-      start:"top 80%",
-      end:"bottom 60%",
-      scrub:true
-    }
-  });
-});
-
-//
-gsap.from(".bin-grid video", {
-  opacity: 0,
-  y: 80,
-  scale: 0.9,
-  stagger: 0.08,
-  ease: "power3.out",
-  scrollTrigger: {
-    trigger: ".media-bin",
-    start: "top 70%",
-  }
-});
-
-/* hover preview */
-document.querySelectorAll(".bin-grid video").forEach(v => {
-  v.addEventListener("mouseenter", () => v.play());
-  v.addEventListener("mouseleave", () => {
-    v.pause();
-    v.currentTime = 0;
-  });
-});
-
-</script>
-<script>
-
-
-
-
-
-
-
-/* ===== IDENTITY REVEAL (SINGLE OBSERVER) ===== */
-const identity = document.querySelector(".identity");
-
-const revealObserver = new IntersectionObserver(
-  ([entry]) => {
-    if (entry.isIntersecting) {
-      identity.classList.add("reveal");
-      revealObserver.disconnect();
-    }
-  },
-  { rootMargin: "0px 0px -30% 0px" }
-);
-
-revealObserver.observe(identity);
-
-/* ===== SAFE PARALLAX (NO ANIMATION KILL) ===== */
-const flower = document.querySelector(".flower-wrap");
-let raf = null;
-
-document.addEventListener("mousemove", e => {
-  if (raf) return;
-  raf = requestAnimationFrame(() => {
-    const x = (window.innerWidth / 2 - e.clientX) / 40;
-    const y = (window.innerHeight / 2 - e.clientY) / 40;
-    flower.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    raf = null;
-  });
-});
-</script>
-
-<script>
-
-/* ================= FIX HERO TEXT ANIMATION ================= */
-
-window.addEventListener("load", () => {
-  const title = document.querySelector(".hero-text h1");
-
-  if (!title) return;
-
-  // Force initial state (important after lazy + defer)
-  gsap.set(title, {
-    opacity: 0,
-    filter: "blur(16px)",
-    y: 30
-  });
-
-  // Animate AFTER fonts + layout are ready
-  gsap.to(title, {
-    opacity: 1,
-    filter: "blur(0px)",
-    y: 0,
-    duration: 1.4,
-    ease: "power3.out",
-    delay: 0.2
-  });
-});
-</script>
+    <video id="modalVideo" autoplay loop playsinline preload="auto"></video>
+  </div>
+</div>
 
 <footer>
   <span>© 2025 Gurshan Singh</span>
   <span>Designed & built with intent</span>
 </footer>
+
+<script>
+const previewVideo = document.getElementById("previewVideo");
+const previewSource = document.getElementById("previewSource");
+const previewTitle = document.getElementById("previewTitle");
+const previewDesc = document.getElementById("previewDesc");
+const loading = document.getElementById("loading");
+const muteBtn = document.getElementById("muteBtn");
+
+const modal = document.getElementById("modal");
+const modalVideo = document.getElementById("modalVideo");
+const modalTitle = document.getElementById("modalTitle");
+const closeBtn = document.getElementById("closeBtn");
+const closeDots = document.getElementById("closeDots");
+const modalMuteBtn = document.getElementById("modalMuteBtn");
+
+const projects = document.querySelectorAll(".project");
+
+let mutedState = true;
+let currentVideoSrc = previewSource.getAttribute("src");
+
+/* ===== MUTE UI ===== */
+function updateMuteUI() {
+  muteBtn.textContent = mutedState ? "🔇 Muted" : "🔊 Sound On";
+  modalMuteBtn.textContent = mutedState ? "🔇 Muted" : "🔊 Sound On";
+}
+
+muteBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  mutedState = !mutedState;
+  previewVideo.muted = mutedState;
+  modalVideo.muted = mutedState;
+  updateMuteUI();
+});
+
+modalMuteBtn.addEventListener("click", () => {
+  mutedState = !mutedState;
+  previewVideo.muted = mutedState;
+  modalVideo.muted = mutedState;
+  updateMuteUI();
+});
+
+updateMuteUI();
+
+/* ===== VIDEO CHANGE (FIXED SAFARI SUPPORT) ===== */
+function changeVideo(src) {
+  if (src === currentVideoSrc) return;
+
+  currentVideoSrc = src;
+  loading.classList.add("active");
+
+  previewVideo.pause();
+  previewVideo.style.opacity = "0";
+
+  previewSource.src = src;
+  previewVideo.load();
+
+  const ready = () => {
+    previewVideo.currentTime = 0;
+    previewVideo.play().catch(()=>{});
+    previewVideo.style.opacity = "1";
+    loading.classList.remove("active");
+
+    previewVideo.removeEventListener("loadeddata", ready);
+    previewVideo.removeEventListener("canplay", ready);
+  };
+
+  previewVideo.addEventListener("loadeddata", ready);
+  previewVideo.addEventListener("canplay", ready);
+}
+
+/* ===== PROJECT CLICK ===== */
+projects.forEach(project => {
+  project.addEventListener("click", () => {
+    projects.forEach(p => p.classList.remove("active"));
+    project.classList.add("active");
+
+    previewTitle.textContent = project.dataset.title;
+    previewDesc.textContent = project.dataset.desc;
+
+    changeVideo(project.dataset.video);
+  });
+});
+
+/* ===== OPEN MODAL ===== */
+document.getElementById("previewMedia").addEventListener("click", () => {
+  modal.classList.add("active");
+
+  modalTitle.textContent = previewTitle.textContent;
+
+  modalVideo.src = currentVideoSrc;
+  modalVideo.muted = mutedState;
+  modalVideo.loop = true;
+  modalVideo.load();
+
+  previewVideo.pause(); // performance
+
+  modalVideo.play().catch(()=>{});
+});
+
+/* ===== CLOSE MODAL ===== */
+function closeModal() {
+  modal.classList.remove("active");
+
+  modalVideo.pause();
+  modalVideo.currentTime = 0;
+  modalVideo.src = "";
+
+  previewVideo.play().catch(()=>{});
+}
+
+closeBtn.addEventListener("click", closeModal);
+closeDots.addEventListener("click", closeModal);
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) closeModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
+
+/* ===== TAB PERFORMANCE ===== */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    previewVideo.pause();
+    modalVideo.pause();
+  } else {
+    if (!modal.classList.contains("active")) previewVideo.play().catch(()=>{});
+    if (modal.classList.contains("active")) modalVideo.play().catch(()=>{});
+  }
+});
+</script>
 
 </body>
 </html>

@@ -5,16 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Contact — Gurshan Singh</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
 /* ================= RESET ================= */
 * { margin:0; padding:0; box-sizing:border-box; }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
 /* ================= BACKGROUND ================= */
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+
   min-height: 100vh;
+  overflow-x: hidden;
+  color: #fff;
+
   background: linear-gradient(
     120deg,
     #0b0b0b,
@@ -27,303 +36,255 @@ body {
   animation: gradientMove 18s ease infinite;
 }
 
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.10), transparent 65%),
+    radial-gradient(circle at bottom, rgba(0,0,0,0.65), transparent 75%);
+}
+
 @keyframes gradientMove {
   0% { background-position:0% 50%; }
   50% { background-position:100% 50%; }
   100% { background-position:0% 50%; }
 }
+
+/* Noise overlay */
+.noise {
+  position:fixed;
+  inset:0;
+  background:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:.04;
+  pointer-events:none;
+  z-index:50;
+}
+
+/* ================= NAVBAR (WORKS STYLE) ================= */
 .navbar {
   position: fixed;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(16px);
-  padding: 6px;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
-  z-index: 100;
-}
+  z-index: 999;
 
-.pill {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 88px;
-  height: calc(100% - 12px);
-  background: rgba(255,255,255,0.28);
+  padding: 8px;
   border-radius: 999px;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 0;
-}
 
-.nav-item {
-  position: relative;
-  z-index: 1;
-  width: 88px;
-  text-align: center;
-  padding: 10px 0;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: "Poppins", sans-serif;
-  text-decoration: none;
-}
-.nav-item {
-  position: relative;
-  padding: 10px 18px;
-  color: #fff;
-  font-size: .9rem;
-  opacity: 100;
-  text-decoration: none;
-  background: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: opacity .3s ease;
-}
-#page-transition {
-  position: fixed;
-  inset: 0;
-  background: #0b0b0b;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .6s cubic-bezier(.22,1,.36,1);
-}
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(18px);
 
-#page-transition.active {
-  opacity: 1;
-}
-body[data-active="home"] .pill { transform: translateX(0); }
-body[data-active="works"] .pill { transform: translateX(94px); }
-body[data-active="about"] .pill { transform: translateX(188px); }
-body[data-active="contact"] .pill { transform: translateX(282px); }
-
-/* ================= NAVBAR CONTRAST BACKDROP ================= */
-.contact-wrapper::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 110px;
-  pointer-events: none;
-
-  /* IMPORTANT: must sit BETWEEN background and navbar */
-  z-index: 50;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.50),
-    rgba(0,0,0,0.25),
-    rgba(0,0,0,0)
-  );
-}
-
-/* ================= LAYOUT ================= */
-.contact-wrapper {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 120px 6vw;
+  gap: 8px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
 }
 
-/* ================= PAPER CARD ================= */
-.contact-paper {
-  width: 100%;
-  max-width: 1100px;
-  background: #f4f1ec;
-  border-radius: 20px;
-  padding: 80px;
+.nav-item {
+  text-decoration: none;
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 999px;
+  transition: 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  box-shadow:
-    0 40px 90px rgba(0,0,0,.25),
-    inset 0 0 0 1px rgba(0,0,0,.08);
+.nav-item:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
 
+.nav-item.active {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+}
+
+/* ================= HERO ================= */
+.hero {
+  padding: 170px 10% 60px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  font-weight: 760;
+  letter-spacing: -1.8px;
+  line-height: 1.03;
+}
+
+.hero p {
+  margin-top: 18px;
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.65);
+}
+
+/* ================= MAIN GRID ================= */
+.contact-wrapper {
+  padding: 0 10% 130px;
   display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 60px;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+/* ================= GLASS CARDS ================= */
+.card {
+  border-radius: 28px;
+  padding: 40px 38px;
+
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px);
+
+  box-shadow: 0 30px 90px rgba(0,0,0,0.60);
 
   opacity: 0;
-  transform: translateY(70px) scale(.97);
-  transition: all 1.1s cubic-bezier(.22,1,.36,1);
+  transform: translateY(30px);
+  transition: 0.9s cubic-bezier(.22,1,.36,1);
 }
 
-.contact-paper.reveal {
+.card.reveal {
   opacity: 1;
-  transform: rotateX(0) translateY(0) scale(1);
+  transform: translateY(0);
 }
 
-/* folded corner */
-.contact-paper::after {
-  content:"";
-  position:absolute;
-  top:0;
-  right:0;
-  width:120px;
-  height:120px;
-  background:linear-gradient(
-    135deg,
-    rgba(0,0,0,.12),
-    rgba(0,0,0,.02) 60%,
-    transparent 60%
-  );
-  clip-path:polygon(100% 0, 0 0, 100% 100%);
-  border-top-right-radius:18px;
-  opacity:.8;
+.card h2 {
+  font-size: 1.7rem;
+  font-weight: 760;
+  letter-spacing: -0.6px;
 }
 
-/* ================= LEFT ================= */
-.contact-left h1 {
-  font-size: clamp(3rem, 5vw, 4.5rem);
-  font-weight: 700;
-  margin-bottom: 22px;
-}
-
-.contact-left p {
-  font-size: 1rem;
+.card p {
+  margin-top: 14px;
+  font-size: 14px;
   line-height: 1.7;
-  max-width: 420px;
-  margin-bottom: 32px;
+  color: rgba(255,255,255,0.68);
 }
 
 /* ================= CONTACT LINKS ================= */
 .contact-links {
+  margin-top: 28px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .contact-link {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 18px 22px;
-  border-radius: 14px;
-  background: rgba(0,0,0,.05);
-  border: 1px solid rgba(0,0,0,.12);
+  align-items: center;
+
+  padding: 16px 18px;
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+
   text-decoration: none;
-  color: #111;
-  transition: all .4s cubic-bezier(.22,1,.36,1);
+  color: rgba(255,255,255,0.85);
+
+  transition: 0.35s cubic-bezier(.22,1,.36,1);
 }
 
 .contact-link span {
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.2px;
 }
 
 .contact-link small {
-  opacity: .6;
-  font-size: .85rem;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
 }
 
 .contact-link:hover {
-  transform: translateX(8px);
-  background: rgba(0,0,0,.08);
-}
-
-/* ================= RIGHT ================= */
-.contact-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.16);
 }
 
 /* ================= FORM ================= */
 form {
+  margin-top: 26px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
 }
 
 input, textarea {
   width: 100%;
-  padding: 16px 18px;
-  font-family: "Poppins", sans-serif;
-  font-size: .95rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,.2);
-  background: transparent;
-  outline: none;
-  transition: all .3s ease;
-}
+  padding: 15px 16px;
 
-input:focus, textarea:focus {
-  border-color: #000;
-  background: rgba(0,0,0,.04);
+  font-family: inherit;
+  font-size: 14px;
+
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+
+  background: rgba(0,0,0,0.30);
+  color: rgba(255,255,255,0.9);
+
+  outline: none;
+  transition: 0.25s ease;
 }
 
 textarea {
   resize: none;
-  min-height: 120px;
+  min-height: 130px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+input:focus,
+textarea:focus {
+  border-color: rgba(255,255,255,0.30);
+  background: rgba(0,0,0,0.40);
 }
 
 /* ================= BUTTON ================= */
 button {
-  margin-top: 10px;
-  align-self: flex-start;
-  padding: 14px 34px;
+  margin-top: 8px;
+  width: fit-content;
+  padding: 12px 28px;
   border-radius: 999px;
-  border: none;
-  background: #111;
-  color: #fff;
-  font-family: "Poppins", sans-serif;
-  font-size: .9rem;
+
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(18px);
+
+  color: rgba(255,255,255,0.95);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+
   cursor: pointer;
-  transition: transform .4s cubic-bezier(.22,1,.36,1);
-}
-
-button:hover {
-  transform: translateY(-2px);
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-  .contact-paper {
-    grid-template-columns: 1fr;
-    padding: 60px 40px;
-  }
-}
-
-@media (max-width: 600px) {
-  .contact-paper {
-    padding: 40px 26px;
-  }
-}
-
-/* Loader */
-.btn-loader {
-  display: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255,255,255,.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-}
-
-button.loading .btn-text { display: none; }
-button.loading .btn-loader { display: block; }
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-/* Success state */
-.contact-right form.sent {
-  opacity: .6;
-  pointer-events: none;
-}
-button {
+  transition: 0.35s cubic-bezier(.22,1,.36,1);
   position: relative;
   overflow: hidden;
 }
 
+button:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.16);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* Loader */
 .btn-loader {
   position: absolute;
   inset: 0;
@@ -332,175 +293,368 @@ button {
   opacity: 0;
 }
 
-button.loading .btn-text {
-  opacity: 0;
+.btn-loader::after {
+  content:"";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: rgba(255,255,255,0.9);
+  animation: spin .8s linear infinite;
 }
 
-button.loading .btn-loader {
-  opacity: 1;
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+button.loading .btn-text { opacity: 0; }
+button.loading .btn-loader { opacity: 1; }
+
+/* Success state */
+form.sent {
+  opacity: .6;
+  pointer-events: none;
 }
 
 form.sent input,
 form.sent textarea {
-  opacity: .4;
-  pointer-events: none;
+  opacity: .45;
 }
-/* ================== FOOTER ================== */
+/* ================= HIRE ME SECTION ================= */
+.hire-section {
+  padding: 0 10% 120px;
+}
+
+.hire-box {
+  border-radius: 30px;
+  padding: 55px 50px;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(22px);
+
+  box-shadow: 0 35px 120px rgba(0,0,0,0.65);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.hire-text h2 {
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  font-weight: 780;
+  letter-spacing: -1.4px;
+  line-height: 1.05;
+}
+
+.hire-text p {
+  margin-top: 14px;
+  max-width: 520px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.68);
+}
+
+.hire-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hire-btn {
+  text-decoration: none;
+  padding: 12px 22px;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.08);
+
+  color: rgba(255,255,255,0.92);
+
+  transition: 0.35s cubic-bezier(.22,1,.36,1);
+}
+
+.hire-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.14);
+}
+
+.hire-btn.primary {
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.hire-btn.primary:hover {
+  background: rgba(255,255,255,0.92);
+}
+
+/* ================= RESPONSIVE HIRE SECTION ================= */
+@media(max-width: 850px){
+  .hire-box {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px 28px;
+  }
+
+  .hire-actions {
+    width: 100%;
+  }
+
+  .hire-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media(max-width: 768px){
+  .hire-section {
+    padding: 0 7% 90px;
+  }
+}
+
+/* ================= FOOTER ================= */
 footer {
   padding: 40px 10%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
-  font-family: "Poppins", sans-serif;
   font-size: 13px;
-  letter-spacing: 0.3px;
-
-  color: rgba(255, 255, 255, 0.75);
-
-  /* subtle separation */
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-
-  /* optional soft backdrop (very premium) */
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.35),
-    rgba(0,0,0,0)
-  );
-
-  position: relative;
-  z-index: 5;
+  color: rgba(255,255,255,0.55);
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-/* footer text smoothing */
-footer span {
-  white-space: nowrap;
+/* ================= RESPONSIVE ================= */
+@media(max-width: 980px){
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* ================== MOBILE ================== */
-@media (max-width: 600px) {
+@media(max-width: 768px){
+  .hero {
+    padding: 145px 7% 55px;
+  }
+
+  .contact-wrapper {
+    padding: 0 7% 100px;
+  }
+
   footer {
     flex-direction: column;
     gap: 10px;
     text-align: center;
-    padding: 28px 6vw;
-    font-size: 12px;
   }
 }
-@media (max-width: 768px){
-  .navbar { top: 12px; padding: 4px; gap: 4px; }
-  .nav-item { width: 72px; font-size: 12px; padding: 8px 0; }
-  .pill { width: 72px; top: 4px; left: 4px; height: calc(100% - 8px); }
 
-  body[data-active="home"] .pill { transform: translateX(0); }
-  body[data-active="works"] .pill { transform: translateX(76px); }
-  body[data-active="about"] .pill { transform: translateX(152px); }
-  body[data-active="contact"] .pill { transform: translateX(228px); }
-}
-/* ================= REMOVE BLUE TAP / FOCUS HIGHLIGHT ================= */
-
-/* Navbar items */
-.nav-item,
-.nav-item:focus,
-.nav-item:active {
-  outline: none;
-  box-shadow: none;
-  -webkit-tap-highlight-color: transparent; /* Android / iOS */
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
-/* All clickable elements safety */
-a,
-button,
-a:focus,
-button:focus,
-a:active,
-button:active {
+/* Remove tap highlight */
+a, button {
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
+/* ================= MOBILE OPTIMIZATION ================= */
+@media(max-width: 600px){
 
-/* Prevent selection glow on mobile */
-* {
-  -webkit-touch-callout: none;
+  .hero {
+    padding: 135px 7% 40px;
+    text-align: left;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    line-height: 1.05;
+    letter-spacing: -1.2px;
+  }
+
+  .hero p {
+    font-size: 14px;
+    max-width: 100%;
+    margin-top: 14px;
+    margin-inline: 0;
+  }
+
+  .contact-wrapper {
+    padding: 0 7% 85px;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .card {
+    width: 100%;
+    padding: 26px 20px;
+    border-radius: 22px;
+  }
+
+  .card h2 {
+    font-size: 1.35rem;
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .contact-link {
+    padding: 14px 14px;
+    border-radius: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .contact-link span {
+    font-size: 13px;
+  }
+
+  .contact-link small {
+    font-size: 12px;
+  }
+
+  input, textarea {
+    font-size: 13px;
+    padding: 14px 14px;
+    border-radius: 16px;
+  }
+
+  textarea {
+    min-height: 115px;
+  }
+
+  button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 13px;
+  }
+
+  footer {
+    padding: 30px 7%;
+    font-size: 12px;
+  }
 }
-
 
 </style>
 </head>
 
-<body data-active="contact">
-    <div id="page-transition"></div>
+<body>
 
+<div class="noise"></div>
+
+<!-- NAVBAR -->
 <nav class="navbar">
-  <div class="pill"></div>
-
-  <a href="index.html" class="nav-item" data-page="home">Home</a>
-  <a href="works.html" class="nav-item" data-page="works">Works</a>
-  <a href="about.html" class="nav-item" data-page="about">About</a>
-  <a href="contact.html" class="nav-item" data-page="contact">Contact</a>
+  <a href="index.html" class="nav-item">Home</a>
+  <a href="works.html" class="nav-item">Works</a>
+  <a href="about.html" class="nav-item">About</a>
+  <a href="contact.html" class="nav-item active">Contact</a>
 </nav>
 
+<!-- HERO -->
+<section class="hero">
+  <h1>Let’s build something.<br>Clean. Cinematic. Real.</h1>
+  <p>
+    Got an idea, project, or just want to say hi?
+    I’m open to collaborations, creative work, and meaningful conversations.
+  </p>
+</section>
 
+<!-- CONTACT GRID -->
 <section class="contact-wrapper">
-  <div class="contact-paper">
 
-    <!-- LEFT -->
-    <div class="contact-left">
-      <h1>let’s talk.</h1>
+  <!-- LEFT CARD -->
+  <div class="card" id="leftCard">
+    <h2>Find me here</h2>
+    <p>Reach out through any platform — I respond fast and keep things simple.</p>
+
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:gurshansingh48242@gmail.com">
+        <span>Email</span>
+        <small>gurshansingh48242@gmail.com</small>
+      </a>
+
+      <a class="contact-link" href="https://instagram.com/rvnhxle" target="_blank">
+        <span>Instagram</span>
+        <small>@rvnhxle</small>
+      </a>
+
+      <a class="contact-link" href="https://www.youtube.com/@rvnhxle" target="_blank">
+        <span>YouTube</span>
+        <small>@rvnhxle</small>
+      </a>
+      <a class="contact-link" href="https://payhip.com/rvnhxle" target="_blank">
+        <span>Payhip</span>
+        <small>rvnhxle</small>
+      </a>
+
+      <a class="contact-link" href="https://github.com/gurshxn-js" target="_blank">
+        <span>GitHub</span>
+        <small>@gurshxn-js</small>
+      </a>
+
+      <a class="contact-link" href="https://www.linkedin.com/in/gurshan-singh-2881003a1/" target="_blank">
+        <span>LinkedIn</span>
+        <small>Gurshan Singh</small>
+      </a>
+    </div>
+  </div> 
+
+  <!-- RIGHT CARD -->
+  <div class="card" id="rightCard">
+    <h2>Send a message</h2>
+    <p>Tell me what you’re working on — I’ll reply as soon as possible.</p>
+
+    <form 
+      id="contact-form"
+      action="https://formspree.io/f/xpqjjzqa"
+      method="POST"
+    >
+      <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" placeholder="Tell me about your idea…" required></textarea>
+
+      <button type="submit">
+        <span class="btn-text">Send message</span>
+        <span class="btn-loader"></span>
+      </button>
+    </form>
+  </div>
+
+</section>
+<!-- HIRE ME SECTION -->
+<section class="hire-section">
+  <div class="hire-box">
+
+    <div class="hire-text">
+      <h2>Hire me for your next project.</h2>
       <p>
-        Got an idea, project, or just want to say hi?  
-        I’m always open to collaborations, creative work,
-        and meaningful conversations.
+        Premium video editing, motion design, and clean storytelling visuals.
+        If you want cinematic content that feels modern and intentional — let’s talk.
       </p>
-
-      <div class="contact-links">
-        <a class="contact-link" href="mailto:gurshansingh48242@gmail.com">
-          <span>Email</span>
-          <small></small>
-        </a>
-
-        <a class="contact-link" href="https://instagram.com/rvnhxle" target="_blank">
-          <span>Instagram</span>
-          <small></small>
-        </a>
-
-        <a class="contact-link" href="https://www.youtube.com/@rvnhxle" target="_blank">
-          <span>YouTube</span>
-          <small></small>
-        </a>
-        <a class="contact-link" href="https://github.com/gurshxn-js" target="_blank">
-          <span>Github</span>
-          <small></small>
-        </a>
-        <a class="contact-link" href="https://www.linkedin.com/in/gurshan-singh-2881003a1/" target="_blank">
-          <span>Linkedin</span>
-          <small></small>
-        </a>
-      </div>
     </div>
 
-    <!-- RIGHT -->
-     <div class="contact-right">
-  <form 
-    id="contact-form"
-    action="https://formspree.io/f/mykgykre"
-    method="POST"
-  >
-    <input type="text" name="name" placeholder="Your name" required>
-    <input type="email" name="email" placeholder="Your email" required>
-    <textarea name="message" placeholder="Tell me about your idea…" required></textarea>
-
-    <button type="submit">
-      <span class="btn-text">Send message</span>
-      <span class="btn-loader"></span>
-    </button>
-  </form>
-</div>
-
-
+    <div class="hire-actions">
+      <a href="https://wa.me/919878977942?text=Hi%20Gurshan,%20I%20want%20to%20hire%20you%20for%20a%20project." target="_blank" class="hire-btn primary">
+  Hire Me
+</a>
+      <a href="https://payhip.com/rvnhxle" target="_blank" class="hire-btn">View Payhip</a>
+    </div>
 
   </div>
 </section>
+
+
+<!-- FOOTER -->
 <footer>
   <span>© 2025 Gurshan Singh</span>
   <span>Designed & built with intent</span>
@@ -508,16 +662,18 @@ button:active {
 
 <script>
 window.addEventListener("load", () => {
-  document.querySelector(".contact-paper").classList.add("reveal");
+  document.getElementById("leftCard").classList.add("reveal");
+  document.getElementById("rightCard").classList.add("reveal");
 });
 </script>
+
 <script>
 const form = document.getElementById("contact-form");
 const button = form.querySelector("button");
 const text = button.querySelector(".btn-text");
 
 form.addEventListener("submit", async (e) => {
-  e.preventDefault(); // 🔥 STOP REDIRECT
+  e.preventDefault();
 
   button.classList.add("loading");
 

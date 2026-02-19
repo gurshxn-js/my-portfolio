@@ -11,8 +11,15 @@
 /* ================= GLOBAL ================= */
 * { margin:0; padding:0; box-sizing:border-box; }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
   background: linear-gradient(
     120deg,
     #0b0b0b,
@@ -27,56 +34,63 @@ body {
   overflow-x: hidden;
 }
 
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.10), transparent 65%),
+    radial-gradient(circle at bottom, rgba(0,0,0,0.65), transparent 75%);
+}
+
 @keyframes gradientMove {
   0% { background-position:0% 50%; }
   50% { background-position:100% 50%; }
   100% { background-position:0% 50%; }
 }
 
-/* ================= NAVBAR ================= */
+/* ================= NAVBAR (EXACT WORKS STYLE) ================= */
 .navbar {
   position: fixed;
-  top: 20px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(16px);
-  padding: 6px;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  overflow: hidden;
-  z-index: 100;
-}
+  z-index: 999;
 
-.pill {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 88px;
-  height: calc(100% - 12px);
-  background: rgba(255,255,255,0.28);
+  padding: 8px;
   border-radius: 999px;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 0;
+
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(18px);
+
+  display: flex;
+  gap: 8px;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
 }
 
 .nav-item {
-  position: relative;
-  z-index: 1;
-  width: 88px;
-  text-align: center;
-  padding: 10px 0;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-family: "Poppins", sans-serif;
   text-decoration: none;
-  transition: opacity .3s ease;
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 999px;
+  transition: 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
 }
 
 /* ================= ABOUT SECTION ================= */
@@ -274,7 +288,7 @@ body {
 .info p { font-size: .95rem; line-height: 1.6; }
 
 .skills { display: flex; gap: 16px; margin-top: 15px; }
-.skills img { width: 56px; position: static; /* Override absolute from visuals wrapper if reused */ }
+.skills img { width: 56px; position: static; }
 
 /* ===== MICRO MOTION ===== */
 .paper.reveal .clip,
@@ -311,13 +325,7 @@ body {
 }
 #page-transition.active { opacity: 1; }
 
-body[data-active="home"] .pill { transform: translateX(0); }
-body[data-active="works"] .pill { transform: translateX(94px); }
-body[data-active="about"] .pill { transform: translateX(188px); }
-
 /* ================= RESPONSIVE BREAKPOINTS ================= */
-
-/* Tablet / Small Desktop */
 @media (max-width: 1100px) {
   .paper {
     grid-template-columns: 1fr;
@@ -329,10 +337,8 @@ body[data-active="about"] .pill { transform: translateX(188px); }
     transform: scale(85%);
     top: -120px;
   }
-  /* Visuals wrapper scales naturally now */
 }
 
-/* Mobile */
 @media (max-width: 600px) {
   .paper {
     padding: 60px 24px;
@@ -343,23 +349,14 @@ body[data-active="about"] .pill { transform: translateX(188px); }
   .about-right { margin-top: 0px; top: -65px; transform: scale(76%);  }
 }
 
-/* Extra Small Mobile (Navbar Fixes) */
 @media (max-width: 420px) {
-  .navbar { top: 12px; padding: 4px; gap: 4px; }
-  .nav-item { width: 72px; font-size: 12px; padding: 8px 0; }
-  .pill { width: 72px; top: 4px; left: 4px; height: calc(100% - 8px); }
-
-  body[data-active="home"] .pill { transform: translateX(0); }
-  body[data-active="works"] .pill { transform: translateX(76px); }
-  body[data-active="about"] .pill { transform: translateX(152px); }
-
   .paper { padding: 35px 18px; border-radius: 14px; }
   .about-left h1 { font-size: 2.1rem; }
   .about-left p { font-size: 0.95rem; }
   .about-right { top: -45px; }
-  
   .skills img { width: 48px; }
 }
+
 /* ================== FOOTER ================== */
 footer {
   padding: 40px 10%;
@@ -373,10 +370,8 @@ footer {
 
   color: rgba(255, 255, 255, 0.75);
 
-  /* subtle separation */
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 
-  /* optional soft backdrop (very premium) */
   background: linear-gradient(
     to top,
     rgba(0,0,0,0.35),
@@ -387,7 +382,6 @@ footer {
   z-index: 5;
 }
 
-/* footer text smoothing */
 footer span {
   white-space: nowrap;
 }
@@ -402,64 +396,40 @@ footer span {
     font-size: 12px;
   }
 }
-@media (max-width: 768px){
-  .navbar { top: 12px; padding: 4px; gap: 4px; }
-  .nav-item { width: 72px; font-size: 12px; padding: 8px 0; }
-  .pill { width: 72px; top: 4px; left: 4px; height: calc(100% - 8px); }
 
-  body[data-active="home"] .pill { transform: translateX(0); }
-  body[data-active="works"] .pill { transform: translateX(76px); }
-  body[data-active="about"] .pill { transform: translateX(152px); }
-  body[data-active="contact"] .pill { transform: translateX(228px); }
-}
+/* WORKS PAGE NAVBAR MOBILE STYLE */
+
 /* ================= REMOVE BLUE TAP / FOCUS HIGHLIGHT ================= */
-
-/* Navbar items */
-.nav-item,
-.nav-item:focus,
-.nav-item:active {
-  outline: none;
-  box-shadow: none;
-  -webkit-tap-highlight-color: transparent; /* Android / iOS */
-}
-
-/* All clickable elements safety */
-a,
-button,
-a:focus,
-button:focus,
-a:active,
-button:active {
+a, button {
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Prevent selection glow on mobile */
 * {
   -webkit-touch-callout: none;
 }
-
 </style>
 </head>
 
-<body data-active="about">
-    <div id="page-transition"></div>
+<body>
 
+<div id="page-transition"></div>
+
+<!-- NAVBAR (WORKS EXACT) -->
 <nav class="navbar">
-  <div class="pill"></div>
-  <a href="index.html" class="nav-item" data-page="home">Home</a>
-  <a href="works.html" class="nav-item" data-page="works">Works</a>
-  <a href="about.html" class="nav-item" data-page="about">About</a>
-  <a href="contact.html" class="nav-item" data-page="contact">Contact</a>
+  <a href="index.html" class="nav-item">Home</a>
+  <a href="works.html" class="nav-item">Works</a>
+  <a href="about.html" class="nav-item active">About</a>
+  <a href="contact.html" class="nav-item">Contact</a>
 </nav>
 
 <section class="about-wrapper">
   <div class="paper">
     <!-- LEFT -->
     <div class="about-left">
-      <h1>about me.</h1>
+      <h1><b>about me.</b></h1>
       <p>
-        hi, it’s gurshan — an editor and designer who believes that every
+        hi, it’s gurshan, an editor and designer who believes that every
         visual tells a story. Over the years I’ve been known as
         <strong>Swoopo</strong>, <strong>rvnhxle</strong> and <strong>Ryden</strong>.
       </p>
